@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  postgres:
+    container_name: postgres_noise
+    image: postgres:13
+    networks:
+      - adonis_network
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    ports:
+      - 5432:5432
+    hostname: postgres
+
+  redis:
+    container_name: redis
+    networks:
+      - adonis_network
+    image: redis:6-alpine
+    volumes:
+      - redis_volume:/data
+    ports:
+      - 6379:6379
+
+  adonis_app:
+    container_name: adonis_app
+    networks:
+      - adonis_network
+    restart: always
+    build:
+      context: .
+      target: dependencies
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229
+      - 8080:8080
+    env_file:
+      - .env
+    volumes:
+      - ./:/home/node/app
+      - /home/node/app/node_modules
+    command: dumb-init node ace serve --watch
+
+volumes:
+  postgres_volume:
+  redis_volume:
+
+networks:
+  adonis_network:
+    driver: bridge
