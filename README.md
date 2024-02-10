@@ -7,6 +7,9 @@ This is a dockerized AdonisJS v6 Setup which can be used as templating engine. T
 
 
 ```bash
+  # Copy the .env.example as .env and change the variables
+  cp .env.example .env
+
   # Build the application: 
   docker compose build
   
