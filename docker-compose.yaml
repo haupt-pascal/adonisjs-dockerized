@@ -35,14 +35,14 @@ services:
       target: dependencies
     ports:
       - ${PORT}:${PORT}
-      - 9229:9229
+      - 5173:5173
       - 8080:8080
     env_file:
       - .env
     volumes:
       - ./:/home/node/app
       - /home/node/app/node_modules
-    command: dumb-init node ace serve --watch
+    command: dumb-init npm run dev --host
 
 volumes:
   postgres_volume:
